@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="ThreatLens — production CTI console: multi-feed IOC ingestion, AbuseIPDB and VirusTotal enrichment, correlation, scoring and four SOC dashboards.">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1, noarchive">
+  <title>ThreatLens — Cyber Threat Intelligence Dashboard</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ThreatLens">
+  <meta property="og:title" content="ThreatLens — Cyber Threat Intelligence Dashboard">
+  <meta property="og:description" content="Multi-feed IOC ingestion, real enrichment, correlation and scoring across four role-based SOC dashboards.">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ThreatLens — Cyber Threat Intelligence Dashboard">
+  <meta name="twitter:description" content="Multi-feed IOC ingestion, real enrichment, correlation and scoring across four role-based SOC dashboards.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath d='M4.5 7.5 14 2l9.5 5.5v10L14 23l-9.5-5.5z' fill='none' stroke='%233EC7B3' stroke-width='1.6'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./design/tokens.css">
+  <link rel="stylesheet" href="./src/styles.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to work area</a>
+  <h1 class="sr-only">ThreatLens — Cyber Threat Intelligence Dashboard</h1>
+  <nav class="app-breadcrumb breadcrumb" aria-label="Breadcrumb">
+    <a href="/threatlens">ThreatLens</a><span aria-hidden="true">/</span><span aria-current="page">Operations console</span>
+  </nav>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="ThreatLens overview">
+        <svg class="brand-mark" viewBox="0 0 28 28" role="img" aria-label="ThreatLens mark">
+          <path d="M4.5 7.5 14 2l9.5 5.5v10L14 23l-9.5-5.5z"/>
+          <path d="M9 10.2 14 7l5 3.2v5.6L14 19l-5-3.2z"/>
+          <path d="M14 7v12M9 10.2l10 5.6M19 10.2 9 15.8"/>
+        </svg>
+        <span>ThreatLens</span>
+        <span class="env-chip">PROD</span>
+      </a>
+      <button class="mobile-nav-button icon-button" type="button" data-action="toggle-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <label class="global-search" for="global-search">
+        <i data-lucide="search"></i>
+        <input id="global-search" type="search" autocomplete="off" placeholder="Search indicators, incidents, techniques" aria-label="Global search">
+        <kbd>/</kbd>
+      </label>
+      <div class="topbar-actions">
+        <span class="connection-state" id="connection-state"><span class="live-dot"></span>live</span>
+        <button class="icon-button" type="button" id="theme-toggle" aria-label="Toggle light/dark" title="Toggle light/dark"><i data-lucide="sun-moon"></i></button><button class="icon-button" type="button" data-action="toggle-tray" aria-label="Open notifications">
+          <i data-lucide="bell"></i><span class="notification-count">3</span>
+        </button>
+        <button class="user-button" type="button" data-action="toggle-user" aria-expanded="false">
+          <span class="avatar">PN</span><span class="user-copy"><strong>Priya Nair</strong><small>SOC analyst</small></span><i data-lucide="chevron-down"></i>
+        </button>
+      </div>
+    </header>
+
+    <aside class="sidebar" aria-label="Primary navigation">
+      <nav>
+        <p class="nav-label">WORKSPACES</p>
+        <a class="nav-item" href="#overview" data-route="overview"><i data-lucide="layout-dashboard"></i><span>Executive overview</span></a>
+        <a class="nav-item" href="#triage" data-route="triage"><i data-lucide="list-filter"></i><span>Triage queue</span><span class="nav-count critical-count">7</span></a>
+        <a class="nav-item" href="#incidents" data-route="incidents"><i data-lucide="siren"></i><span>Incidents</span><span class="nav-count">12</span></a>
+        <a class="nav-item" href="#hunt" data-route="hunt"><i data-lucide="crosshair"></i><span>Threat hunting</span></a>
+        <p class="nav-label nav-label-spaced">SYSTEM</p>
+        <a class="nav-item" href="#admin-feeds" data-route="admin-feeds"><i data-lucide="rss"></i><span>Feeds</span></a>
+        <a class="nav-item" href="#admin-users" data-route="admin-users"><i data-lucide="users"></i><span>Users</span></a>
+        <a class="nav-item" href="#admin-audit" data-route="admin-audit"><i data-lucide="scroll-text"></i><span>Audit log</span></a>
+        <a class="nav-item" href="#admin-health" data-route="admin-health"><i data-lucide="activity"></i><span>Health</span><span class="health-ok" title="All services nominal"></span></a>
+      </nav>
+      <div class="sidebar-foot">
+        <div><span class="live-dot"></span><span>ingest nominal</span></div>
+        <code>v1.0.0</code>
+      </div>
+    </aside>
+
+    <main id="main" class="main" tabindex="-1">
+      <section class="view" data-view="overview" aria-labelledby="overview-title">
+        <header class="view-header">
+          <div><p class="eyebrow">RISK POSTURE</p><h2 id="overview-title" class="view-title">Executive overview</h2><p class="subhead">30-day exposure, active intelligence, and SOC throughput.</p></div>
+          <div class="header-actions"><span class="freshness"><span class="live-dot"></span>updated <time class="mono" datetime="2026-09-28T14:02:11Z">14:02:11Z</time> · live</span><button class="button ghost" type="button" id="widget-config-btn" aria-label="Configure dashboard widgets"><i data-lucide="layout-dashboard"></i>Widgets</button><button class="button secondary" type="button" data-action="generate-report"><i data-lucide="file-output"></i>Generate report</button></div>
+        </header>
+        <div class="stat-strip" aria-label="Risk summary">
+          <div class="risk-primary"><span>RISK SCORE</span><strong class="tabular" id="ov-risk">72</strong><small class="delta-up"><i data-lucide="arrow-up"></i>6 pts / 30d</small></div>
+          <div><span>ACTIVE CRITICAL</span><strong class="tabular critical-text" id="ov-critical">17</strong><small id="ov-critical-sub">5 correlated internally</small></div>
+          <div><span>ACTIVE HIGH</span><strong class="tabular high-text" id="ov-high">143</strong><small id="ov-high-sub">28 new since 00:00Z</small></div>
+          <div><span id="ov-open-label">OPEN ALERTS</span><strong class="tabular" id="ov-open">286</strong><small id="ov-open-sub">41 unassigned</small></div>
+          <div><span id="ov-extra-label">MEDIAN TRIAGE</span><strong class="tabular" id="ov-extra">08m 42s</strong><small class="delta-down" id="ov-extra-sub">1m 18s faster</small></div>
+        </div>
+        <div class="overview-layout">
+          <section class="panel dominant-panel" data-widget="threat-volume" aria-labelledby="volume-title">
+            <div class="section-head"><div><p class="eyebrow">INGEST + CORRELATION</p><h2 id="volume-title">Threat volume</h2></div><div class="legend"><span><i class="legend-line cyan"></i>indicators</span><span><i class="legend-line orange"></i>internal sightings</span></div></div>
+            <div class="chart-wrap" id="overview-chart" role="img" aria-label="Thirty-day threat volume chart"></div>
+            <div class="chart-note"><span id="chart-note-1">Peak <strong class="tabular">18,422</strong> on 2026-09-24</span><span id="chart-note-2">correlation ratio <strong class="tabular">3.8%</strong></span></div>
+          </section>
+          <aside class="panel threat-rail" data-widget="top-threats" aria-labelledby="top-threats-title">
+            <div class="section-head"><div><p class="eyebrow">CURRENT</p><h2 id="top-threats-title">Top threats</h2></div><button class="text-button" type="button" data-action="view-all-threats">View all</button></div>
+            <ol class="rank-list" id="top-threats-list">
+              <li><span class="rank mono">01</span><div><strong>Qakbot resurgence</strong><small>banking · T1059 · 42 indicators</small></div><span class="severity critical">CRITICAL</span></li>
+              <li><span class="rank mono">02</span><div><strong>IcedID loader campaign</strong><small>malware · T1105 · 87 indicators</small></div><span class="severity high">HIGH</span></li>
+              <li><span class="rank mono">03</span><div><strong>Emotet malspam</strong><small>email · T1566.001 · 119 indicators</small></div><span class="severity high">HIGH</span></li>
+              <li><span class="rank mono">04</span><div><strong>Cobalt Strike staging</strong><small>C2 · T1219 · 31 indicators</small></div><span class="severity medium">MEDIUM</span></li>
+            </ol>
+          </aside>
+          <section class="panel throughput-panel" data-widget="throughput-panel" aria-labelledby="throughput-title">
+            <div class="section-head"><div><p class="eyebrow">SOC OPERATIONS</p><h2 id="throughput-title">Alert throughput</h2></div><span class="mono muted">last 7d</span></div>
+            <div class="throughput-grid"><div><strong class="tabular" id="th-1">1,842</strong><span>raised</span></div><div><strong class="tabular" id="th-2">1,706</strong><span>resolved</span></div><div><strong class="tabular" id="th-3">92.6%</strong><span>clearance</span></div></div>
+            <div class="bar-pair"><span><i id="th-bar" style="--bar:92.6%"></i></span><small id="th-note">136 net open</small></div>
+          </section>
+          <section class="panel target-panel" data-widget="heatmap-widget" aria-labelledby="heatmap-title">
+            <div class="section-head"><div><p class="eyebrow">GEOGRAPHIC</p><h2 id="heatmap-title">Threat origin heatmap</h2></div><span class="mono muted">live</span></div>
+            <div id="heatmap-container" style="padding:var(--space-3)"></div>
+          </section>
+          <section class="panel target-panel" aria-labelledby="target-title" data-widget="target-panel">
+            <div class="section-head"><div><p class="eyebrow">EXPOSURE</p><h2 id="target-title">Targeted assets</h2></div></div>
+            <table class="compact-table"><thead id="asset-mix-head"><tr><th>Asset group</th><th class="num">Sightings</th><th class="num">Î” 7d</th></tr></thead><tbody id="asset-mix"><tr><td>identity-prod</td><td class="num mono">382</td><td class="num high-text">+18%</td></tr><tr><td>payments-edge</td><td class="num mono">241</td><td class="num critical-text">+31%</td></tr><tr><td>corp-endpoints</td><td class="num mono">198</td><td class="num low-text">-7%</td></tr></tbody></table>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" data-view="triage" aria-labelledby="triage-title">
+        <header class="view-header compact-header">
+          <div><p class="eyebrow">SOC ANALYST</p><h2 id="triage-title" class="view-title">Triage queue</h2></div>
+          <div class="header-actions"><span class="freshness"><span class="live-dot"></span>updated <time class="mono">14:02:11Z</time> · live</span><button class="button primary" type="button" data-action="start-work"><i data-lucide="play"></i>Start work</button></div>
+        </header>
+        <div class="queue-counters"><div class="counter active" id="qc-new" role="status"><span>NEW</span><strong class="tabular">36</strong></div><div class="counter" id="qc-unassigned" role="status"><span>UNASSIGNED</span><strong class="tabular">41</strong></div><div class="counter" id="qc-mine" role="status"><span>MY QUEUE</span><strong class="tabular">12</strong></div><div class="queue-hint"><kbd>j</kbd><kbd>k</kbd> move <kbd>Enter</kbd> open</div></div>
+        <div class="workbench triage-workbench">
+          <section class="queue-region" aria-label="Alert queue">
+            <div class="toolbar">
+              <label class="filter-search"><i data-lucide="search"></i><input id="triage-filter" type="search" placeholder="Filter value, family, source" aria-label="Filter alerts"></label>
+              <button class="filter-chip active" type="button" data-triage-chip="open" aria-pressed="true">Open <span id="chip-open">36</span></button>
+              <button class="filter-chip" type="button" data-triage-chip="critical" aria-pressed="false">Critical <span id="chip-critical">0</span></button>
+              <button class="filter-chip" type="button" data-triage-chip="high" aria-pressed="false">High <span id="chip-high">0</span></button>
+              
+              <label class="state-control">STATE<select data-state-target="alerts" aria-label="Alert list state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label>
+            </div>
+            <div class="state-banner stale-banner" data-banner="alerts" hidden><i data-lucide="clock-3"></i>Stale data · last successful update <span class="mono">2026-09-28 13:54:03Z</span><button class="text-button" type="button" data-action="retry">Retry</button></div>
+            <div class="table-scroll" id="alert-table-container"></div>
+          </section>
+          <aside class="detail-drawer" id="alert-detail" aria-label="Alert detail" aria-hidden="true">
+            <div class="drawer-head"><div><p class="eyebrow">ALERT DETAIL</p><h2 id="detail-title">Select an alert</h2></div><button class="icon-button" type="button" data-action="close-detail" aria-label="Close detail"><i data-lucide="x"></i></button></div>
+            <div id="detail-content" class="drawer-content"><div class="operator-empty"><i data-lucide="panel-right-open"></i><p>Open a queue row to inspect enrichment and internal sightings.</p></div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view="incidents" aria-labelledby="incidents-title">
+        <header class="view-header compact-header"><div><p class="eyebrow">INCIDENT RESPONSE</p><h2 id="incidents-title" class="view-title">Incident workspace</h2></div><div class="header-actions"><span class="severity critical">SEV-1</span><button class="button secondary" type="button" data-action="generate-report"><i data-lucide="file-output"></i>Generate report</button></div></header>
+        <div class="incident-layout">
+          <aside class="incident-list panel-flat" aria-label="Open incidents">
+            <div class="section-head"><div><p class="eyebrow" id="incident-open-count">OPEN · 12</p><h2>Incidents</h2></div><label class="state-control">STATE<select data-state-target="incidents" aria-label="Incident list state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label></div>
+            <div id="incident-list-content"></div>
+          </aside>
+          <article class="incident-main" aria-labelledby="incident-name">
+            <div class="incident-title-block"><div><span class="mono muted" id="incident-code">INC-2026-0941</span><h2 id="incident-name">Qakbot lateral movement — payments segment</h2><p id="incident-owner">Owner Daniel Okafor · opened <time class="mono">2026-09-28 12:41:07Z</time></p></div><div class="incident-actions"><label class="state-control">STATUS<select id="incident-status" class="row-select"><option value="open">open</option><option value="contained">contained</option><option value="resolved">resolved</option><option value="closed">closed</option></select></label><button class="button ghost" type="button" id="incident-pipe"><i data-lucide="radio-tower"></i>Pipe out</button><button class="button primary" type="button" id="incident-escalate"><i data-lucide="shield-alert"></i>Escalate</button></div></div>
+            <div class="incident-tabs" role="tablist"><button class="active" type="button" role="tab" data-incident-tab="timeline">Timeline <span id="tab-timeline-count">18</span></button><button type="button" role="tab" data-incident-tab="indicators">Indicators <span id="tab-indicators-count">24</span></button><button type="button" role="tab" data-incident-tab="evidence" id="tab-evidence">Evidence <span>9</span></button></div>
+            <section class="timeline-section" aria-labelledby="timeline-title"><div class="section-head"><div><p class="eyebrow">APPEND-ONLY</p><h3 id="timeline-title">Incident timeline</h3></div><span class="freshness"><span class="live-dot"></span><time class="mono">14:02:11Z</time> · live</span></div><ol class="timeline" id="timeline-content"></ol></section>
+            <div id="incident-indicators" hidden></div>
+          </article>
+          <aside class="incident-rail">
+            <section class="panel checklist"><div class="section-head"><div><p class="eyebrow">CONTAINMENT</p><h2>Checklist</h2></div><span class="mono" id="checklist-progress">3/6</span></div><div id="checklist-body"><label><input type="checkbox" checked>Isolate affected endpoint</label><label><input type="checkbox" checked>Revoke active sessions</label><label><input type="checkbox" checked>Block C2 at egress</label><label><input type="checkbox">Collect volatile memory</label><label><input type="checkbox">Reset service credentials</label><label><input type="checkbox">Confirm clean beacon test</label></div></section>
+            <section class="panel incident-facts"><div class="section-head"><div><p class="eyebrow">SCOPE</p><h2>Incident facts</h2></div></div><dl id="incident-facts"><div><dt>Assets</dt><dd class="mono">6</dd></div><div><dt>Indicators</dt><dd class="mono">24</dd></div><div><dt>ATT&CK</dt><dd class="mono">T1059, T1021.002, T1105</dd></div><div><dt>TLP</dt><dd><span class="tlp amber">AMBER</span></dd></div></dl></section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view="hunt" aria-labelledby="hunt-title">
+        <header class="view-header compact-header"><div><p class="eyebrow">THREAT HUNTING</p><h2 id="hunt-title" class="view-title">Hunt workspace</h2></div><div class="header-actions"><button class="button secondary" type="button" id="saved-hunts-jump"><i data-lucide="bookmark"></i>Saved hunts</button><button class="button primary" type="button" data-action="save-hunt"><i data-lucide="save"></i>Save hunt</button></div></header>
+        <div class="hunt-query"><label for="hunt-query">QUERY</label><div><i data-lucide="terminal"></i><input id="hunt-query" class="mono" value='type:(domain OR ip) AND score:>=70 AND last_seen:[now-7d TO now]' spellcheck="false"><button class="button primary" type="button" id="hunt-run">Run hunt</button></div></div>
+        <div class="hunt-layout">
+          <aside class="facet-rail panel-flat"><div class="section-head"><div><p class="eyebrow">FACETS</p><h2>Refine</h2></div><button class="text-button" type="button" id="facet-clear">Clear</button></div><div id="facet-content"></div></aside>
+          <section class="hunt-stage">
+            <div class="stage-tabs" role="tablist"><button class="active" type="button" data-hunt-tab="graph">Relationship graph</button><button type="button" data-hunt-tab="attack">ATT&amp;CK overlay</button><button type="button" data-hunt-tab="results">Results <span class="mono">284</span></button><label class="state-control">STATE<select data-state-target="hunt" aria-label="Hunt result state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label></div>
+            <div class="state-banner stale-banner" data-banner="hunt" hidden><i data-lucide="clock-3"></i>Stale index · last refresh <span class="mono">2026-09-28 13:55:42Z</span><button class="text-button" type="button" data-action="retry">Retry</button></div>
+            <div id="hunt-content" class="hunt-content"></div>
+          </section>
+          <aside class="saved-rail panel"><div class="section-head"><div><p class="eyebrow">RECENT</p><h2>Saved hunts</h2></div></div><button class="saved-hunt" type="button" data-q="score:>=80 AND technique:T1021.002"><strong>Rare outbound SMB</strong><span class="mono">score:>=80 AND technique:T1021.002</span><small>Mei Lin · 23m ago</small></button><button class="saved-hunt" type="button" data-q="domain_age:<7d AND sightings:>0"><strong>New domains with sightings</strong><span class="mono">domain_age:&lt;7d AND sightings:&gt;0</span><small>Priya Nair · 2h ago</small></button><button class="saved-hunt" type="button" data-q="tag:loader AND source_count:>=3"><strong>Loader infrastructure pivot</strong><span class="mono">tag:loader AND source_count:&gt;=3</span><small>Mei Lin · 1d ago</small></button></aside>
+        </div>
+      </section>
+
+      <section class="view" data-view="admin-feeds" aria-labelledby="feeds-title">
+        <header class="view-header compact-header"><div><p class="eyebrow">ADMIN · INGESTION</p><h2 id="feeds-title" class="view-title">Feeds</h2></div><div class="header-actions"><span class="freshness"><span class="live-dot"></span>updated <time class="mono">14:02:11Z</time> · live</span><button class="button primary" type="button" id="add-feed"><i data-lucide="plus"></i>Add feed</button></div></header>
+        <div class="admin-layout"><section class="admin-main"><div class="toolbar"><label class="filter-search"><i data-lucide="search"></i><input type="search" placeholder="Filter feeds" aria-label="Filter feeds"></label><label class="state-control">STATE<select data-state-target="feeds" aria-label="Feed list state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label></div><div class="state-banner stale-banner" data-banner="feeds" hidden><i data-lucide="clock-3"></i>Stale data · last poll <span class="mono">2026-09-28 13:58:00Z</span><button class="text-button" type="button" data-action="retry">Retry</button></div><div class="table-scroll" id="feed-table-container"></div></section><aside class="admin-rail panel"><div class="section-head"><div><p class="eyebrow">INGEST · 24H</p><h2>Poller summary</h2></div></div><dl class="metric-list"><div><dt>Indicators received</dt><dd class="mono">1,284,942</dd></div><div><dt>Canonical merges</dt><dd class="mono">384,108</dd></div><div><dt>Rejected records</dt><dd class="mono high-text">1,204</dd></div><div><dt>Median poll lag</dt><dd class="mono">38s</dd></div></dl></aside></div>
+      </section>
+
+      <section class="view" data-view="admin-users" aria-labelledby="users-title">
+        <header class="view-header compact-header"><div><p class="eyebrow">ADMIN · ACCESS</p><h2 id="users-title" class="view-title">Users and roles</h2></div><button class="button primary" type="button" id="add-user"><i data-lucide="user-plus"></i>Add user</button></header>
+        <div class="admin-layout"><section class="admin-main"><div class="toolbar"><label class="filter-search"><i data-lucide="search"></i><input type="search" placeholder="Filter users" aria-label="Filter users"></label><label class="state-control">STATE<select data-state-target="users" aria-label="User list state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label></div><div class="table-scroll" id="user-table-container"></div></section><aside class="admin-rail panel"><div class="section-head"><div><p class="eyebrow">POLICY</p><h2>Access posture</h2></div></div><dl class="metric-list"><div><dt>Active users</dt><dd class="mono">43</dd></div><div><dt>MFA coverage</dt><dd class="mono low-text">95.3%</dd></div><div><dt>Privileged accounts</dt><dd class="mono">6</dd></div><div><dt>Review due</dt><dd class="mono medium-text">4</dd></div></dl></aside></div>
+      </section>
+
+      <section class="view" data-view="admin-audit" aria-labelledby="audit-title">
+        <header class="view-header compact-header"><div><p class="eyebrow">ADMIN · GOVERNANCE</p><h2 id="audit-title" class="view-title">Audit log</h2></div><button class="button secondary" type="button" id="export-audit"><i data-lucide="download"></i>Export CSV</button></header>
+        <section class="full-admin"><div class="toolbar"><label class="filter-search wide"><i data-lucide="search"></i><input id="audit-action" type="search" placeholder="Exact action — e.g. alert.acknowledge" aria-label="Filter by action">
+<input id="audit-actor" type="search" placeholder="Filter by actor email" aria-label="Filter by actor"></label><button class="filter-chip" type="button" data-audit-chip="alert.updated" aria-pressed="false">Alert changes</button><button class="filter-chip" type="button" data-audit-chip="auth.login" aria-pressed="false">Sign-ins</button><label class="state-control">STATE<select data-state-target="audit" aria-label="Audit list state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label></div><div class="table-scroll" id="audit-table-container"></div></section>
+      </section>
+
+      <section class="view" data-view="admin-health" aria-labelledby="health-title">
+        <header class="view-header compact-header"><div><p class="eyebrow">ADMIN · PLATFORM</p><h2 id="health-title" class="view-title">System health</h2></div><span class="freshness"><span class="live-dot"></span>updated <time class="mono">14:02:11Z</time> · live</span></header>
+        <div class="health-layout"><section class="health-main"><div class="service-strip"><div><span>API STATUS</span><strong class="mono" id="hs-1">—</strong><small>GET /health</small></div><div><span>DATABASE</span><strong class="mono" id="hs-2">—</strong><small>canonical store</small></div><div><span>FEEDS OK</span><strong class="mono" id="hs-3">—</strong><small>enabled · polling</small></div><div><span>WS CHANNELS</span><strong class="mono" id="hs-4">—</strong><small>bus subscribers</small></div></div><div class="toolbar"><h2>Services</h2><label class="state-control">STATE<select data-state-target="health" aria-label="Health list state"><option value="populated">populated</option><option value="loading">loading</option><option value="empty">empty</option><option value="error">error</option><option value="stale">stale</option></select></label></div><div id="health-content"></div></section><aside class="health-rail panel"><div class="section-head"><div><p class="eyebrow">EVENTS · 24H</p><h2>Health changes</h2></div></div><ol class="health-events"><li><span class="status-dot medium-dot"></span><div><strong>URLhaus poll delayed</strong><small class="mono">2026-09-28 13:42:19Z</small></div></li><li><span class="status-dot low-dot"></span><div><strong>search-02 rejoined</strong><small class="mono">2026-09-28 10:18:44Z</small></div></li><li><span class="status-dot info-dot"></span><div><strong>worker pool scaled to 8</strong><small class="mono">2026-09-28 08:00:03Z</small></div></li></ol></aside></div>
+      </section>
+      <section class="view" data-view="login" aria-labelledby="login-title">
+        <div class="login-wrap">
+          <div class="login-panel">
+            <div class="login-head"><span class="avatar">TL</span><div><p class="eyebrow">SENTINOVA SECURITY SYSTEMS</p><h2 id="login-title" class="view-title">Sign in</h2></div></div>
+            <form id="login-form" novalidate>
+              <label class="login-field"><span>ENDPOINT</span><input id="login-endpoint" class="mono" type="url" placeholder="same-origin · override for tunneled backends" spellcheck="false" autocomplete="off"></label>
+              <label class="login-field"><span>EMAIL</span><input id="login-email" type="email" required autocomplete="username" placeholder="operator@sentinova.io"></label>
+              <label class="login-field"><span>PASSWORD</span><input id="login-password" type="password" required autocomplete="current-password" placeholder="••••••••••"></label>
+              <p class="login-error" id="login-error" hidden></p>
+              <button class="button primary login-submit" type="submit">Sign in</button>
+            </form>
+            <div class="login-personas">
+              <p class="eyebrow">SEEDED PERSONAS</p>
+              <div class="persona-grid">
+                <button type="button" class="persona" data-action="login-persona" data-email="analyst@sentinova.io" data-password="Analyst!Secure2026"><strong>Priya Nair</strong><small>SOC analyst</small></button>
+                <button type="button" class="persona" data-action="login-persona" data-email="responder@sentinova.io" data-password="IR!Secure2026x"><strong>Daniel Okafor</strong><small>Incident responder</small></button>
+                <button type="button" class="persona" data-action="login-persona" data-email="hunter@sentinova.io" data-password="Hunt!Secure2026"><strong>Mei Lin Tan</strong><small>Threat hunter</small></button>
+                <button type="button" class="persona" data-action="login-persona" data-email="exec@sentinova.io" data-password="Exec!Secure2026"><strong>Rachel Adeyemi</strong><small>Executive</small></button>
+                <button type="button" class="persona" data-action="login-persona" data-email="engineer@sentinova.io" data-password="Eng!nSecure2026"><strong>Sam Whitfield</strong><small>Security engineer</small></button>
+                <button type="button" class="persona" data-action="login-persona" data-email="admin@sentinova.io" data-password="Admin!Secure2026"><strong>Alex Morgan</strong><small>Administrator</small></button>
+              </div>
+              <p class="login-note">Passwords are seeded demo credentials for the ThreatLens reference build.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="app-footer">
+        <p><strong>ThreatLens</strong> — Sentinova Security Systems CTI console</p>
+        <nav aria-label="Project links">
+          <a href="https://github.com/itsdsilva/Sentinova-ThreatLens" target="_blank" rel="noopener">Source repository</a>
+          <a href="/docs" target="_blank" rel="noopener">API documentation</a>
+          <a href="/threatlens">Console</a>
+        </nav>
+      </footer>
+    </main>
+
+    <aside class="notification-tray" id="notification-tray" aria-hidden="true" aria-label="Notifications">
+      <div class="tray-head"><div><p class="eyebrow">NOTIFICATIONS · 3</p><h2>Operator tray</h2></div><button class="text-button" type="button" id="tray-clear">Clear</button><button class="icon-button" type="button" data-action="toggle-tray" aria-label="Close notifications"><i data-lucide="x"></i></button></div>
+      <div class="notification-item critical-edge"><span class="severity critical">CRITICAL</span><strong>7 new Qakbot indicators correlated</strong><p>payments-edge · rule CORR-019</p><time class="mono">2026-09-28 14:01:46Z</time></div>
+      <div class="notification-item high-edge"><span class="severity high">HIGH</span><strong>Feed failure: TAXII partner-west</strong><p>HTTP 429 · retry at 14:06Z</p><time class="mono">2026-09-28 13:58:12Z</time></div>
+      <div class="notification-item info-edge"><span class="severity info">INFO</span><strong>INC-2026-0938 report ready</strong><p>Generated from 31 timeline events</p><time class="mono">2026-09-28 13:47:29Z</time></div>
+    </aside>
+    <div class="user-menu popover" id="user-menu" hidden><button type="button" id="open-profile"><i data-lucide="user-round"></i>Profile</button><button type="button" id="open-keymap"><i data-lucide="keyboard"></i>Keyboard map</button><button type="button" data-action="logout"><i data-lucide="log-out"></i>Sign out</button></div>
+    
+    <dialog class="console-dialog" id="dialog-edit-feed" aria-labelledby="edit-feed-title">
+      <form id="form-edit-feed" novalidate>
+        <header class="dialog-head"><div><p class="eyebrow">INGESTION</p><h2 id="edit-feed-title">Edit feed</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Close"><i data-lucide="x"></i></button></header>
+        <label class="dialog-field"><span>FEED</span><input name="name" readonly class="mono"></label>
+        <div class="dialog-pair">
+          <label class="dialog-field"><span>CONFIDENCE</span><input name="source_confidence" type="number" min="1" max="100"></label>
+          <label class="dialog-field"><span>POLL INTERVAL · S</span><input name="poll_interval_seconds" type="number" min="60"></label>
+        </div>
+        <label class="dialog-field"><span>DEFAULT TLP</span><select name="default_tlp"><option value="clear">CLEAR</option><option value="green">GREEN</option><option value="amber">AMBER</option><option value="red">RED</option></select></label>
+        <p class="dialog-error" hidden></p>
+        <footer class="dialog-foot"><button class="button ghost" type="button" data-action="close-dialog">Cancel</button><button class="button primary" type="submit">Save changes</button></footer>
+      </form>
+    </dialog>
+    <dialog class="console-dialog" id="dialog-add-feed" aria-labelledby="add-feed-title">
+      <form id="form-add-feed" novalidate>
+        <header class="dialog-head"><div><p class="eyebrow">INGESTION</p><h2 id="add-feed-title">Add feed</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Close"><i data-lucide="x"></i></button></header>
+        <label class="dialog-field"><span>NAME</span><input name="name" required placeholder="Partner east — TAXII collection"></label>
+        <label class="dialog-field"><span>PROVIDER</span><input name="provider" required placeholder="partner-org"></label>
+        <label class="dialog-field"><span>ADAPTER</span><select name="adapter" id="feed-adapter-select"></select></label>
+        <div class="dialog-pair">
+          <label class="dialog-field"><span>CONFIDENCE</span><input name="source_confidence" type="number" min="1" max="100" value="60"></label>
+          <label class="dialog-field"><span>POLL INTERVAL · S</span><input name="poll_interval_seconds" type="number" min="60" value="900"></label>
+        </div>
+        <p class="dialog-error" hidden></p>
+        <footer class="dialog-foot"><button class="button ghost" type="button" data-action="close-dialog">Cancel</button><button class="button primary" type="submit">Add feed</button></footer>
+      </form>
+    </dialog>
+    <dialog class="console-dialog" id="dialog-add-user" aria-labelledby="add-user-title">
+      <form id="form-add-user" novalidate>
+        <header class="dialog-head"><div><p class="eyebrow">ACCESS</p><h2 id="add-user-title">Add user</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Close"><i data-lucide="x"></i></button></header>
+        <label class="dialog-field"><span>EMAIL</span><input name="email" type="email" required placeholder="operator@sentinova.io"></label>
+        <label class="dialog-field"><span>NAME</span><input name="name" required placeholder="Full name"></label>
+        <label class="dialog-field"><span>PASSWORD · 10+ CHARS</span><input name="password" type="password" required minlength="10" placeholder="••••••••••"></label>
+        <label class="dialog-field"><span>ROLE</span><select name="role">
+          <option value="soc_analyst">SOC analyst</option>
+          <option value="incident_responder">Incident responder</option>
+          <option value="threat_hunter">Threat hunter</option>
+          <option value="security_engineer">Security engineer</option>
+          <option value="executive">Executive</option>
+          <option value="administrator">Administrator</option>
+        </select></label>
+        <p class="dialog-error" hidden></p>
+        <footer class="dialog-foot"><button class="button ghost" type="button" data-action="close-dialog">Cancel</button><button class="button primary" type="submit">Add user</button></footer>
+      </form>
+    </dialog>
+    <dialog class="console-dialog" id="dialog-keymap" aria-labelledby="keymap-title">
+      <header class="dialog-head"><div><p class="eyebrow">OPERATOR REFERENCE</p><h2 id="keymap-title">Keyboard map</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <dl class="keymap">
+        <dt><kbd>/</kbd></dt><dd>Focus global search</dd>
+        <dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Move through the triage queue</dd>
+        <dt><kbd>Enter</kbd></dt><dd>Open the selected alert</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Close drawer, tray, menu or dialog</dd>
+      </dl>
+      <footer class="dialog-foot"><button class="button ghost" type="button" data-action="close-dialog">Close</button></footer>
+    </dialog>
+    <dialog class="console-dialog" id="dialog-profile" aria-labelledby="profile-title">
+      <header class="dialog-head"><div><p class="eyebrow">SESSION</p><h2 id="profile-title">Profile</h2></div><button class="icon-button" type="button" data-action="close-dialog" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <div id="profile-body"></div>
+      <footer class="dialog-foot"><button class="button ghost" type="button" data-action="close-dialog">Close</button></footer>
+    </dialog>
+
+        <dialog class="console-dialog" id="widget-panel" aria-labelledby="widget-panel-title">
+      <header class="dialog-head"><div><p class="eyebrow">DASHBOARD LAYOUT</p><h2 id="widget-panel-title">Configure widgets</h2></div><button class="icon-button" type="button" data-action="close-widget-panel" aria-label="Close"><i data-lucide="x"></i></button></header>
+      <div id="widget-panel-body"></div>
+    </dialog>
+    <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+  </div>
+</body>
+</html>

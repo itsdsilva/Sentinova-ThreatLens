@@ -1,0 +1,108 @@
+/* ThreatLens design tokens — D01 through D10 are documented in DECISIONS.md */
+:root {
+  color-scheme: dark;
+
+  --font-ui: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  --text-11: 0.6875rem;
+  --text-12: 0.75rem;
+  --text-13: 0.8125rem;
+  --text-14: 0.875rem;
+  --text-16: 1rem;
+  --text-20: 1.25rem;
+  --text-24: 1.5rem;
+
+  --leading-11: 1rem;
+  --leading-12: 1.125rem;
+  --leading-13: 1.25rem;
+  --leading-14: 1.375rem;
+  --leading-16: 1.5rem;
+  --leading-20: 1.75rem;
+  --leading-24: 2rem;
+
+  --tracking-tight: -0.015em;
+  --tracking-ui: -0.006em;
+  --tracking-label: 0.075em;
+  --tracking-mono: 0.01em;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --space-0: 0;
+  --space-1: 0.125rem;
+  --space-2: 0.25rem;
+  --space-3: 0.375rem;
+  --space-4: 0.625rem;
+  --space-5: 0.875rem;
+  --space-6: 1.25rem;
+  --space-7: 1.75rem;
+  --space-8: 2.5rem;
+
+  --control-h: 2rem;
+  --control-h-lg: 2.25rem;
+  --topbar-h: 3rem;
+  --sidebar-w: 13.25rem;
+  --rail-w: 19rem;
+  --table-row-h: 2.125rem;
+
+  --radius-control: 0.25rem;
+  --radius-panel: 0.5rem;
+
+  --canvas: #080D10;
+  --surface-0: #0C1216;
+  --surface-1: #11191E;
+  --surface-2: #172127;
+  --surface-raised: #1C282F;
+  --line-subtle: #243139;
+  --line-strong: #33434C;
+
+  --text-primary: #E8EDF0;
+  --text-secondary: #B6C0C7;
+  --text-muted: #8E9AA2;
+  --text-disabled: #68767F;
+  --text-inverse: #071013;
+
+  --accent: #3EC7B3;
+  --accent-hover: #5FD6C3;
+  --accent-pressed: #28A996;
+  --accent-wash: #102D2A;
+  --focus: #79E1D2;
+
+  --critical: #F05B61;
+  --critical-wash: #32191D;
+  --critical-line: #74343B;
+  --high: #F28A3B;
+  --high-wash: #342218;
+  --high-line: #754527;
+  --medium: #E7B84B;
+  --medium-wash: #302918;
+  --medium-line: #6C5829;
+  --low: #55B983;
+  --low-wash: #152B21;
+  --low-line: #2D6045;
+  --info: #91A3AE;
+  --info-wash: #1A252B;
+  --info-line: #41535D;
+
+  --tlp-clear: #C7D0D5;
+  --tlp-green: #63C28B;
+  --tlp-amber: #E5AE48;
+  --tlp-red: #EF686D;
+
+  --chart-cyan: #54B9D1;
+  --chart-blue: #5B8FD9;
+  --chart-grid: #26343C;
+  --chart-area: #12343A;
+  --selection: #183C38;
+  --overlay: #06090C;
+  --white: #FFFFFF;
+
+  --shadow-popover: 0 0.75rem 2rem #00000052;
+  --transition-interactive: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-new-row: 720ms ease-out;
+  --z-sticky: 20;
+  --z-overlay: 40;
+  --z-toast: 60;
+}

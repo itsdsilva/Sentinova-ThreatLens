@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: threatlens-backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////data/threatlens.db
+      - ABUSEIPDB_KEY=${ABUSEIPDB_KEY:-}
+      - VIRUSTOTAL_KEY=${VIRUSTOTAL_KEY:-}
+      - OTX_KEY=${OTX_KEY:-}
+      - SHODAN_KEY=${SHODAN_KEY:-}
+      - GREYNOISE_KEY=${GREYNOISE_KEY:-}
+      - PHISHTANK_KEY=${PHISHTANK_KEY:-}
+      - MALWAREBAZAAR_KEY=${MALWAREBAZAAR_KEY:-}
+    volumes:
+      - threatlens-data:/data
+
+volumes:
+  threatlens-data:
